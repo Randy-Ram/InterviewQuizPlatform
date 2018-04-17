@@ -1,0 +1,26 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+iqp/node_modules
+
+# testing
+iqp/coverage
+
+# production
+iqp/build
+
+# misc
+iqp/.DS_Store
+iqp/.env.local
+iqp/.env.development.local
+iqp/.env.test.local
+iqp/.env.production.local
+
+iqp/npm-debug.log*
+iqp/yarn-debug.log*
+iqp/yarn-error.log*
+
+venv/
+*.pyc
+.idea/
+
