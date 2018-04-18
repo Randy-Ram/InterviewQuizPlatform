@@ -28,29 +28,32 @@ export class Test6TableComponent extends React.Component {
             {
               key: '1',
               name: '1',
-              editable: true,
+            //   editable: true,
               resizable: true,
               events: {
                 onClick: this.handleCellSelected
-              }
+              },
+              width:100
             },
             {
               key: '2',
               name: '2',
-              editable: true,
+            //   editable: true,
               resizable: true,
               events: {
                 onClick: this.handleCellSelected
-              }
+              },
+              width:100
             },
             {
               key: '3',
               name: '3',
-              editable: true,
+            //   editable: true,
               resizable: true,
               events: {
                 onClick: this.handleCellSelected
-              }
+              },
+              width:100
             }
           ];
 
@@ -62,6 +65,7 @@ export class Test6TableComponent extends React.Component {
           this.rowGetter = this.rowGetter.bind(this);
           this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
           this.handleCellSelected = this.handleCellSelected.bind(this);
+        //   this.getCellActions = this.getCellActions.bind(this);
     }
 
     createRows(){
@@ -84,6 +88,7 @@ export class Test6TableComponent extends React.Component {
       };
 
     handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
+        console.log(arguments)
         let rows = this.state.rows.slice();
         console.log(fromRow, toRow, updated)
         for (let i = fromRow; i <= toRow; i++) {
@@ -104,7 +109,32 @@ export class Test6TableComponent extends React.Component {
     handleCellSelected = (ev, { idx, rowIdx }) => {
         // console.log(idx, rowIdx);
         // console.log(this.state.rows)
-        this.handleGridRowsUpdated(rowIdx, rowIdx, "Hello")
+        let newRows = this.state.rows;
+        switch(idx){
+        case 3:
+            newRows[rowIdx]["1"] = newRows[rowIdx]["1"] === '✅' ? '' : '✅';
+            this.setState({
+                rows: newRows
+            })
+            break;
+        case 4:
+            newRows[rowIdx]["2"] = newRows[rowIdx]["2"] === '✅' ? '' : '✅';
+            this.setState({
+                rows: newRows
+            })
+            break;
+        case 5:
+            newRows[rowIdx]["3"] = newRows[rowIdx]["3"] === '✅' ? '' : '✅';
+            this.setState({
+                rows: newRows
+            })
+            break;
+        default:
+            
+        }
+        this.props.onCellClick(rowIdx, idx)
+        //console.log(this.state.rows)
+        //this.handleGridRowsUpdated({rowIdx, rowIdx, "Hello"})
     }
 
     handleAnswerMappingUpdate(letter_id, num1, num2, num3, num4) {
@@ -112,6 +142,7 @@ export class Test6TableComponent extends React.Component {
         let userInput = num1 + num2 + num3 + num4
         this.props.onValueChange(letter_id, userInput);
     }
+
 
     render(){
         // this.updateInitialRowState();
@@ -122,8 +153,9 @@ export class Test6TableComponent extends React.Component {
             rowGetter={this.rowGetter}
             rowsCount={this.state.rows.length}
             minHeight={950}
-            minWidth={1000}
-            onGridRowsUpdated={this.handleGridRowsUpdated} 
+            minWidth={751}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            // getCellActions={this.getCellActions}
             />
         )
     }

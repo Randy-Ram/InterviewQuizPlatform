@@ -3,7 +3,28 @@ import { test6TableContent } from './Test6TableContent';
 import { Test6TableComponent } from '../Components/Test6TableComponent';
 import { Grid, Row, Col, Alert } from 'react-bootstrap';
 
+
+let answer6Mapping = {}
+for(var index in test6TableContent){
+    for(var index2 in test6TableContent[index]){
+        let newCol = parseInt(index2, 10) + 3
+        answer6Mapping["row_" + index.toString() + "_col_" + newCol.toString()] = 0
+    }
+}
+
+// console.log(answer6Mapping);
 export class Test6Container extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.handleAnswerMapping = this.handleAnswerMapping.bind(this);
+    }
+
+    handleAnswerMapping(row, col){
+        console.log(row, col)
+        answer6Mapping["row_" + row.toString() + "_col_" + col.toString()] = answer6Mapping["row_" + row.toString() + "_col_" + col.toString()] === 0 ? 1 : 0
+        console.log(answer6Mapping);
+    }
 
     render(){
         return(
@@ -31,8 +52,8 @@ export class Test6Container extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12}>
-                        <Test6TableComponent rows={test6TableContent}/>
+                    <Col xs={12} xsOffset={2}>
+                        <Test6TableComponent rows={test6TableContent} onCellClick={this.handleAnswerMapping}/>
                     </Col>
                 </Row>
             </Grid>
