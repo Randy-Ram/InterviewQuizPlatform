@@ -1,48 +1,27 @@
 import React from 'react';
-import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
 
-export class Test4TableComponent extends React.Component {
+export class Test8TableComonent extends React.Component {
     constructor(props){
         super(props);
 
         this._columns = [
             {
-              key: 'letter_id',
-              name: '',
-              width: 100
-            },
-            {
-              key: 'num1',
-              name: '',
-              editable: true,
+              key: '#',
+              name: '#',
+              resizable: false,
+              editable: this.props.editable,
+              width:150,
+              height: 300,       
               events: {
                 onClick: this.cellEditWithOneClick
               }
             },
             {
-              key: 'num2',
-              name: '',
-              editable: true,
-              events: {
-                onClick: this.cellEditWithOneClick
-              }
-            },
-            {
-              key: 'num3',
-              name: '',
-              editable: true,
-              events: {
-                onClick: this.cellEditWithOneClick
-              }
-            },
-            {
-              key: 'num4',
-              name: '',
-              editable: true,
-              events: {
-                onClick: this.cellEditWithOneClick
-              }
+              key: 'proverb',
+              name: this.props.name,
+              resizable: false,
+              width:150,
+              editable: false
             }
           ];
 
@@ -62,11 +41,8 @@ export class Test4TableComponent extends React.Component {
         let rows = []
         for(var i=0; i < this.props.rows.length; i++){
             rows.push({
-                letter_id:  this.props.rows[i],
-                num1: i === 0 ? '1' : i === 1 ? '2' : '',
-                num2: i === 0 ? '9' : i === 1 ? '0' : '',
-                num3: i === 0 ? '2' : i === 1 ? '7' : '',
-                num4: i === 0 ? '5' : i === 1 ? '4' : '',
+                '#':  this.props.rows[i][0],
+                'proverb': this.props.rows[i][1]
             })
         }
         //console.log(rows)
@@ -78,22 +54,25 @@ export class Test4TableComponent extends React.Component {
       };
 
     handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
+        //console.log(arguments)
         let rows = this.state.rows.slice();
-
+        //console.log(fromRow, toRow, updated)
         for (let i = fromRow; i <= toRow; i++) {
             let rowToUpdate = rows[i];
             let updatedRow = update(rowToUpdate, {$merge: updated});
             rows[i] = updatedRow;
-            // console.log(rows[i])
-            this.handleAnswerMappingUpdate(rows[i]["letter_id"],
-                                            rows[i]["num1"],
-                                            rows[i]["num2"],
-                                            rows[i]["num3"],
-                                            rows[i]["num4"])
+            //console.log(rows[i], i)
+            this.props.onClick(i, rows[i]['answer'])
+            // this.handleAnswerMappingUpdate(rows[i]["letter_id"],
+            //                                 rows[i]["num1"],
+            //                                 rows[i]["num2"],
+            //                                 rows[i]["num3"],
+            //                                 rows[i]["num4"])
         }
 
         this.setState({ rows });
     };
+
 
     handleAnswerMappingUpdate(letter_id, num1, num2, num3, num4) {
         letter_id = letter_id.replace(/\s/g, "")
@@ -105,6 +84,8 @@ export class Test4TableComponent extends React.Component {
         //console.log("Cell Clicked")
         this.grid.openCellEditor(rowIdx, idx);
       };
+    
+
 
     render(){
         // this.updateInitialRowState();
@@ -115,10 +96,13 @@ export class Test4TableComponent extends React.Component {
             columns={this._columns}
             rowGetter={this.rowGetter}
             rowsCount={this.state.rows.length}
-            minHeight={1300}
-            minWidth={500}
-            headerRowHeight={1}
-            onGridRowsUpdated={this.handleGridRowsUpdated} />
+            rowHeight={40}
+            minHeight={530}
+            minWidth={620}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            // getCellActions={this.getCellActions}
+            />
         )
     }
+
 }

@@ -11,7 +11,10 @@ export class Test5TableComponent extends React.Component {
               key: 'name',
               name: this.props.cityName,
               //width: 100,
-              editable: true
+              editable: true,
+              events: {
+                onClick: this.cellEditWithOneClick
+              }
             }
         ]
 
@@ -22,6 +25,7 @@ export class Test5TableComponent extends React.Component {
         this.createRows = this.createRows.bind(this);
         this.rowGetter = this.rowGetter.bind(this);
         this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
+        this.cellEditWithOneClick = this.cellEditWithOneClick.bind(this);
     }
 
     createRows(numRows){
@@ -67,10 +71,16 @@ export class Test5TableComponent extends React.Component {
         this.props.onValueChange(this.props.cityName, userAnswerJoined);
     }
 
+    cellEditWithOneClick = (ev, { idx, rowIdx }) => {
+        //console.log("Cell Clicked")
+        this.grid.openCellEditor(rowIdx, idx);
+      };
+
     render(){
         // this.updateInitialRowState();
         return(
             <ReactDataGrid
+            ref={ (node) => this.grid = node }
             enableCellSelect={true}
             columns={this._columns}
             rowGetter={this.rowGetter}

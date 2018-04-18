@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
+import logo from './logo.svg';
 import './App.css';
 import { Test1Container } from './Test1/containers/Test1Container';
 import { Test2Container } from './Test2/Containers/Test2Container';
@@ -8,15 +8,16 @@ import { Test4Container } from './Test4/Containers/Test4Container';
 import { Test5Container } from './Test5/Containers/Test5Container';
 import { Test6Container } from './Test6/Containers/Test6Container';
 import { Test7Container } from './Test7/Containers/Test7Container';
+import { Test8Container } from './Test8/Containers/Test8Container';
 import { Tabs, Tab } from 'react-bootstrap';
-import maritime_logo from './maritime_logo.png';
+//import maritime_logo from './maritime_logo.png';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={maritime_logo} className="App-logo" alt="logo" />
+          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Pre-Interview Assessment</h1>
         </header>
         <br/>
@@ -41,6 +42,9 @@ class App extends Component {
           </Tab>
           <Tab eventKey={7} title="Test 7">
             <Test7Container/>
+          </Tab>
+          <Tab eventKey={8} title="Test 8">
+            <Test8Container/>
           </Tab>
         </Tabs>
       </div>

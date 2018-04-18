@@ -28,7 +28,7 @@ export class Test6Container extends React.Component {
 
     render(){
         return(
-            <Grid>
+            <Grid style={{padding:"20px"}}>
                 <Row>
                     <Col xs={4}>
                         <Alert id="test_instructions" bsStyle="warning">
