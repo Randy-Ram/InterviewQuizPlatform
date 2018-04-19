@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Test1Container } from './Test1/containers/Test1Container';
-import { Test2Container } from './Test2/Containers/Test2Container';
-import { Test3Container } from './Test3/Containers/Test3Container';
-import { Test4Container } from './Test4/Containers/Test4Container';
-import { Test5Container } from './Test5/Containers/Test5Container';
-import { Test6Container } from './Test6/Containers/Test6Container';
-import { Test7Container } from './Test7/Containers/Test7Container';
-import { Test8Container } from './Test8/Containers/Test8Container';
-import { Tabs, Tab, Grid, Row, Col } from 'react-bootstrap';
+import { TestInterface } from './TestInterface';
+import { Grid, Row, Col } from 'react-bootstrap';
 import Countdown from 'react-countdown-now';
+import { UserFormContainer } from './UserForm/UserFormContainer';
 
 //import maritime_logo from './maritime_logo.png';
 let timerStyle = {
@@ -20,7 +14,39 @@ let timerStyle = {
 }
 
 class App extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      formCompleted: false
+    }
+
+    this.updateAppState = this.updateAppState.bind(this);
+  }
+
+
+updateAppState(formCompletedState){
+    this.setState({
+      formCompleted: formCompletedState
+    })
+}
+
   render() {
+    let testPage = (
+      <div>
+        <Grid>
+            <Row>
+              <Col xsOffset={11}>
+                  <div style={timerStyle}>
+                    <Countdown date={Date.now() + 3900000}/>
+                  </div>
+                </Col>
+              </Row>
+          </Grid>
+          <TestInterface/>
+      </div>
+    )
+    let componentToDisplay = this.state.formCompleted === true ? testPage : <UserFormContainer onSubmit={this.updateAppState}/>
     return (
       <div className="App">
         <header className="App-header">
@@ -28,7 +54,8 @@ class App extends Component {
           <h1 className="App-title">Pre-Interview Assessment</h1>
         </header>
         <br/>
-        <Grid>
+        {componentToDisplay}
+        {/* <Grid>
           <Row>
             <Col xsOffset={11}>
                 <div style={timerStyle}>
@@ -36,33 +63,9 @@ class App extends Component {
                 </div>
               </Col>
             </Row>
-          </Grid>
-        <Tabs defaultActiveKey={1} id="tab-body">
-          <Tab eventKey={1} title="Test 1">
-              <Test1Container/>
-          </Tab>
-          <Tab eventKey={2} title="Test 2">
-              <Test2Container/>
-          </Tab>
-          <Tab eventKey={3} title="Test 3">
-            <Test3Container/>
-          </Tab>
-          <Tab eventKey={4} title="Test 4">
-            <Test4Container/>
-          </Tab>
-          <Tab eventKey={5} title="Test 5">
-            <Test5Container/>
-          </Tab>
-          <Tab eventKey={6} title="Test 6">
-            <Test6Container/>
-          </Tab>
-          <Tab eventKey={7} title="Test 7">
-            <Test7Container/>
-          </Tab>
-          <Tab eventKey={8} title="Test 8">
-            <Test8Container/>
-          </Tab>
-        </Tabs>
+        </Grid>
+          <UserFormContainer/>
+          <TestInterface/> */}
       </div>
     );
   }
