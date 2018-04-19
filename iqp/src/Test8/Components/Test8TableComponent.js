@@ -1,6 +1,8 @@
 import React from 'react';
+import ReactDataGrid from 'react-data-grid';
+import update from 'immutability-helper';
 
-export class Test8TableComonent extends React.Component {
+export class Test8TableComponent extends React.Component {
     constructor(props){
         super(props);
 
@@ -10,8 +12,7 @@ export class Test8TableComonent extends React.Component {
               name: '#',
               resizable: false,
               editable: this.props.editable,
-              width:150,
-              height: 300,       
+              width:50,       
               events: {
                 onClick: this.cellEditWithOneClick
               }
@@ -20,7 +21,7 @@ export class Test8TableComonent extends React.Component {
               key: 'proverb',
               name: this.props.name,
               resizable: false,
-              width:150,
+              width:350,
               editable: false
             }
           ];
@@ -62,7 +63,7 @@ export class Test8TableComonent extends React.Component {
             let updatedRow = update(rowToUpdate, {$merge: updated});
             rows[i] = updatedRow;
             //console.log(rows[i], i)
-            this.props.onClick(i, rows[i]['answer'])
+            this.props.onClick(i, rows[i]['#'])
             // this.handleAnswerMappingUpdate(rows[i]["letter_id"],
             //                                 rows[i]["num1"],
             //                                 rows[i]["num2"],
@@ -97,8 +98,8 @@ export class Test8TableComonent extends React.Component {
             rowGetter={this.rowGetter}
             rowsCount={this.state.rows.length}
             rowHeight={40}
-            minHeight={530}
-            minWidth={620}
+            minHeight={500}
+            minWidth={400}
             onGridRowsUpdated={this.handleGridRowsUpdated}
             // getCellActions={this.getCellActions}
             />

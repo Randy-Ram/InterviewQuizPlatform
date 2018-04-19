@@ -9,8 +9,15 @@ import { Test5Container } from './Test5/Containers/Test5Container';
 import { Test6Container } from './Test6/Containers/Test6Container';
 import { Test7Container } from './Test7/Containers/Test7Container';
 import { Test8Container } from './Test8/Containers/Test8Container';
-import { Tabs, Tab } from 'react-bootstrap';
+import { Tabs, Tab, Grid, Row, Col } from 'react-bootstrap';
+import Countdown from 'react-countdown-now';
+
 //import maritime_logo from './maritime_logo.png';
+let timerStyle = {
+  fontSize: "25px",
+  fontWeight: "bold",
+  color: "#0000A0"
+}
 
 class App extends Component {
   render() {
@@ -21,6 +28,15 @@ class App extends Component {
           <h1 className="App-title">Pre-Interview Assessment</h1>
         </header>
         <br/>
+        <Grid>
+          <Row>
+            <Col xsOffset={11}>
+                <div style={timerStyle}>
+                  <Countdown date={Date.now() + 3900000}/>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
         <Tabs defaultActiveKey={1} id="tab-body">
           <Tab eventKey={1} title="Test 1">
               <Test1Container/>
