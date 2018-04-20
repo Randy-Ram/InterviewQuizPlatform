@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { UserModal } from './UserModal';
 
 export class UserFormContainer extends React.Component {
     constructor(props){
@@ -9,7 +10,9 @@ export class UserFormContainer extends React.Component {
             userId: '',
             firstName: '',
             surName: '',
-            datetime: ''
+            datetime: '',
+            show: false,
+            disabled: false
 
         }
 
@@ -20,7 +23,32 @@ export class UserFormContainer extends React.Component {
         this.handleSurNameChange = this.handleSurNameChange.bind(this);
         this.handleUserIdChange = this.handleUserIdChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.onClickModal = this.onClickModal.bind(this)
     }
+
+    onClickModal(){
+        console.log("test")
+        this.setState({
+            show: false
+        })
+        this.props.onSubmit(true);  //start test
+    }
+
+    showModal() {
+        this.setState({
+            show:true
+        })
+    }
+
+    // validateEntireForm(){
+    //     if(this.state.userId.length > 1 && this.state.firstName.length > 1 && this.state.surName.length)
+    //     {
+    //         this.setState({
+    //             disabled: false
+    //         })
+    //     }
+    // }
 
     getUserIDValidationState(){
         const length = this.state.userId.length
@@ -69,49 +97,60 @@ export class UserFormContainer extends React.Component {
 
     handleSubmit(e){
         e.preventDefault();
-        console.log(this.state);
-        this.props.onSubmit(true);
+        this.showModal();
     }
 
+
+
     render(){
-        return(
+        let userForm = (
             <Form horizontal>
-                <FormGroup controlId="formHorizontalEmail"  validationState={this.getUserIDValidationState()}>
-                    <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                        UserID
-                    </Col>
-                    <Col sm={3}>
-                    <FormControl type="text" value={this.state.userId} onChange={this.handleUserIdChange}/>
-                    <FormControl.Feedback />
-                    </Col>
-                </FormGroup>
+            <FormGroup controlId="formHorizontalEmail"  validationState={this.getUserIDValidationState()}>
+                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+                    UserID
+                </Col>
+                <Col sm={3}>
+                <FormControl type="text" value={this.state.userId} onChange={this.handleUserIdChange}/>
+                <FormControl.Feedback />
+                </Col>
+            </FormGroup>
 
-                <FormGroup controlId="formHorizontalFirstName"  validationState={this.getfirstNameValidationState()}>
-                    <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                    First Name
-                    </Col>
-                    <Col sm={3}>
-                    <FormControl type="text" value={this.state.firstName}  onChange={this.handleFirstNameChange}/>
-                    <FormControl.Feedback />
-                    </Col>
-                </FormGroup>
+            <FormGroup controlId="formHorizontalFirstName"  validationState={this.getfirstNameValidationState()}>
+                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+                First Name
+                </Col>
+                <Col sm={3}>
+                <FormControl type="text" value={this.state.firstName}  onChange={this.handleFirstNameChange}/>
+                <FormControl.Feedback />
+                </Col>
+            </FormGroup>
 
-                <FormGroup controlId="formHorizontalSurname" validationState={this.getSurnameValidationState()} >
-                    <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                    Surname
-                    </Col>
-                    <Col sm={3}>
-                    <FormControl type="text" value={this.state.surName} onChange={this.handleSurNameChange}/>
-                    <FormControl.Feedback />
-                    </Col>
-                </FormGroup>
+            <FormGroup controlId="formHorizontalSurname" validationState={this.getSurnameValidationState()} >
+                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+                Surname
+                </Col>
+                <Col sm={3}>
+                <FormControl type="text" value={this.state.surName} onChange={this.handleSurNameChange}/>
+                <FormControl.Feedback />
+                </Col>
+            </FormGroup>
 
-                <FormGroup>
-                    <Col smOffset={4} sm={2}>
-                    <Button type="submit" onClick={this.handleSubmit}>Submit</Button>
-                    </Col>
-                </FormGroup>
+            <FormGroup>
+                <Col smOffset={4} sm={2}>
+                <Button type="submit" onClick={this.handleSubmit} disabled={this.state.disabled}>Submit</Button>
+                </Col>
+            </FormGroup>
         </Form>
+        )
+        let userModal = <UserModal title="Test Instructions"
+                                   body="This test focuses on accuracy on speed. You will have 65 minutes, click 'Start' when
+                                   you are ready to begin."
+                                   showModal={this.state.show}
+                                   onClickModal={this.props.onClickModal}
+                                   />
+        let compToRender = this.state.show === true ? userModal : userForm; 
+        return(
+            compToRender
         )
     }
 }
