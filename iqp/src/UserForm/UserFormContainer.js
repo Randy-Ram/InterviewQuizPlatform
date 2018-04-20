@@ -12,7 +12,7 @@ export class UserFormContainer extends React.Component {
             surName: '',
             datetime: '',
             show: false,
-            disabled: false
+            errorShow: false
 
         }
 
@@ -25,6 +25,17 @@ export class UserFormContainer extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.showModal = this.showModal.bind(this);
         this.onClickModal = this.onClickModal.bind(this)
+        this.closeErrorModal = this.closeErrorModal.bind(this);
+        this.checkFormValidity = this.checkFormValidity.bind(this);
+        this.showErrorModal = this.showErrorModal.bind(this);
+    }
+
+    checkFormValidity(){
+        if(this.state.userId.length > 1 && this.state.firstName.length > 1 && this.state.surName.length)
+        {
+           return true;
+        }
+        return false;
     }
 
     onClickModal(){
@@ -41,14 +52,17 @@ export class UserFormContainer extends React.Component {
         })
     }
 
-    // validateEntireForm(){
-    //     if(this.state.userId.length > 1 && this.state.firstName.length > 1 && this.state.surName.length)
-    //     {
-    //         this.setState({
-    //             disabled: false
-    //         })
-    //     }
-    // }
+    showErrorModal(){
+        this.setState({
+            errorShow: true,
+        })
+    }
+
+    closeErrorModal(){
+        this.setState({
+            errorShow: false
+        })
+    }
 
     getUserIDValidationState(){
         const length = this.state.userId.length
@@ -96,8 +110,13 @@ export class UserFormContainer extends React.Component {
     }
 
     handleSubmit(e){
+        console.log("Clicked")
         e.preventDefault();
-        this.showModal();
+        if(this.checkFormValidity()){
+            this.showModal();
+        } else {
+            this.showErrorModal();
+        }
     }
 
 
@@ -137,7 +156,7 @@ export class UserFormContainer extends React.Component {
 
             <FormGroup>
                 <Col smOffset={4} sm={2}>
-                <Button type="submit" onClick={this.handleSubmit} disabled={this.state.disabled}>Submit</Button>
+                <Button type="submit" onClick={this.handleSubmit}>Submit</Button>
                 </Col>
             </FormGroup>
         </Form>
@@ -147,10 +166,18 @@ export class UserFormContainer extends React.Component {
                                    you are ready to begin."
                                    showModal={this.state.show}
                                    onClickModal={this.props.onClickModal}
+                                   buttonText={"Start Test"}
                                    />
+        let errorModal = <UserModal title="Error" 
+                                    body="Please ensure that all the relevant fields are properly filled in."
+                                    showModal={this.state.errorShow}
+                                    onClickModal={this.props.closeErrorModal}
+                                    buttonText={"Ok"}
+                        />
         let compToRender = this.state.show === true ? userModal : userForm; 
+        let nextComp = this.state.errorShow === true ? errorModal : compToRender;
         return(
-            compToRender
+            nextComp
         )
     }
 }

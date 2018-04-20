@@ -15,7 +15,7 @@ export class UserModal extends React.Component {
                     <Modal.Body>{this.props.body}</Modal.Body>
 
                     <Modal.Footer>
-                        <Button onClick={this.props.onClickModal}>Start Test</Button>
+                        <Button onClick={this.props.onClickModal}>{this.props.buttonText}</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

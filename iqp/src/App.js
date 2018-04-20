@@ -54,18 +54,7 @@ updateAppState(formCompletedState){
           <h1 className="App-title">Pre-Interview Assessment</h1>
         </header>
         <br/>
-        {componentToDisplay}
-        {/* <Grid>
-          <Row>
-            <Col xsOffset={11}>
-                <div style={timerStyle}>
-                  <Countdown date={Date.now() + 3900000}/>
-                </div>
-              </Col>
-            </Row>
-        </Grid>
-          <UserFormContainer/>
-          <TestInterface/> */}
+          {componentToDisplay}
       </div>
     );
   }
