@@ -6,6 +6,7 @@ import { Grid, Row, Col, Button } from 'react-bootstrap';
 import Countdown from 'react-countdown-now';
 import { UserFormContainer } from './UserForm/UserFormContainer';
 import { UserModal } from './UserForm/UserModal';
+import fetch from 'isomorphic-fetch';
 
 //import maritime_logo from './maritime_logo.png';
 let timerStyle = {
@@ -13,7 +14,6 @@ let timerStyle = {
   fontWeight: "bold",
   color: "#0000A0"
 }
-
 
 let allAnswerMapping = {
 }
@@ -33,6 +33,8 @@ class App extends Component {
     this.updateAppState = this.updateAppState.bind(this);
     this.endTest = this.endTest.bind(this);
     this.closeModal = this.closeModal.bind(this)
+    this.handleTimerComplete = this.handleTimerComplete.bind(this);
+    this.authenticateUser = this.authenticateUser.bind(this);
   }
 
 
@@ -42,7 +44,6 @@ closeModal(){
     testStarted: false,
     endTestClicked: false
   })
-  console.log(allAnswerMapping)
 }
 
 updateAppState(testStartedState){
@@ -56,6 +57,18 @@ endTest(){
     showModal: true,
     endTestClicked: true
   })
+  console.log(allAnswerMapping)
+}
+
+handleTimerComplete(){
+  this.endTest();
+}
+
+authenticateUser(){
+    fetch('/api/authenticate')
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.log)
 }
 
   render() {
@@ -70,12 +83,15 @@ endTest(){
       <div>
         <Grid>
             <Row>
-              <Col xsOffset={11}>
+              <Col md={4} xsOffset={5}>
                   <div style={timerStyle}>
-                    <Countdown date={Date.now() + 3900000}/>
-                    <Button onClick={this.endTest}>End Test</Button>
+                      <Countdown date={Date.now() + 10000} onComplete={this.handleTimerComplete}/>
+                      {/* <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/> */}
                   </div>
-                </Col>
+              </Col>
+              <Col md={2}>
+                <Button onClick={this.endTest} className="pull-right" bsStyle="danger">End Test</Button>
+              </Col>
               </Row>
           </Grid>
           {this.state.endTestClicked === false ? <TestInterface answerMapping={allAnswerMapping}/> : endTestModal}

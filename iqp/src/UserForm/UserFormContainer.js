@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import { UserModal } from './UserModal';
+import { startTestModalBody } from './StartTestModal'
 
 export class UserFormContainer extends React.Component {
     constructor(props){
@@ -8,6 +9,7 @@ export class UserFormContainer extends React.Component {
 
         this.state = {
             userId: '',
+            password: '',
             firstName: '',
             surName: '',
             datetime: '',
@@ -16,11 +18,9 @@ export class UserFormContainer extends React.Component {
 
         }
 
-        this.getfirstNameValidationState = this.getfirstNameValidationState.bind(this);
-        this.getSurnameValidationState = this.getSurnameValidationState.bind(this);
+        this.getPasswordValidationState = this.getPasswordValidationState.bind(this);
         this.getUserIDValidationState = this.getUserIDValidationState.bind(this);
-        this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-        this.handleSurNameChange = this.handleSurNameChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUserIdChange = this.handleUserIdChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -31,7 +31,7 @@ export class UserFormContainer extends React.Component {
     }
 
     checkFormValidity(){
-        if(this.state.userId.length > 1 && this.state.firstName.length > 1 && this.state.surName.length)
+        if(this.state.userId.length > 1 && this.state.password.length > 1)
         {
            return true;
         }
@@ -73,17 +73,8 @@ export class UserFormContainer extends React.Component {
         }
     }
 
-    getfirstNameValidationState(){
-        const length = this.state.firstName.length
-        if(length > 1){
-            return 'success';
-        }else {
-            return 'error';
-        }
-    }
-
-    getSurnameValidationState(){
-        const length = this.state.surName.length
+    getPasswordValidationState(){
+        const length = this.state.password.length
         if(length > 1){
             return 'success';
         }else {
@@ -97,15 +88,9 @@ export class UserFormContainer extends React.Component {
         })
     }
 
-    handleFirstNameChange(e){
+    handlePasswordChange(e){
         this.setState({
             firstName: e.target.value
-        })
-    }
-
-    handleSurNameChange(e){
-        this.setState({
-            surName: e.target.value
         })
     }
 
@@ -135,22 +120,12 @@ export class UserFormContainer extends React.Component {
                 </Col>
             </FormGroup>
 
-            <FormGroup controlId="formHorizontalFirstName"  validationState={this.getfirstNameValidationState()}>
+            <FormGroup controlId="formHorizontalFirstName"  validationState={this.getPasswordValidationState()}>
                 <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                First Name
+                Password
                 </Col>
                 <Col sm={3}>
-                <FormControl type="text" value={this.state.firstName}  onChange={this.handleFirstNameChange}/>
-                <FormControl.Feedback />
-                </Col>
-            </FormGroup>
-
-            <FormGroup controlId="formHorizontalSurname" validationState={this.getSurnameValidationState()} >
-                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                Surname
-                </Col>
-                <Col sm={3}>
-                <FormControl type="text" value={this.state.surName} onChange={this.handleSurNameChange}/>
+                <FormControl type="text" value={this.state.password}  onChange={this.handlePasswordChange}/>
                 <FormControl.Feedback />
                 </Col>
             </FormGroup>
@@ -162,12 +137,12 @@ export class UserFormContainer extends React.Component {
             </FormGroup>
         </Form>
         )
-        let userModal = <UserModal title="Test Instructions"
-                                   body="This test focuses on accuracy on speed. You will have 65 minutes, click 'Start Test' when
-                                   you are ready to begin."
+        let userModal = <UserModal title="Instructions"
+                                   body={startTestModalBody}
                                    showModal={this.state.show}
                                    onClickModal={this.onClickStartModal}
                                    buttonText={"Start Test"}
+                                   bsSize="large"
                                    />
         let errorModal = <UserModal title="Error" 
                                     body="Please ensure that all the relevant fields are properly filled in."
