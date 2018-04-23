@@ -20,7 +20,8 @@ export class Test5Container extends React.Component {
 
     handleUserInput(cityName, userValue){
         answer5Mapping[cityName] = userValue;
-        console.log(answer5Mapping);
+        //console.log(answer5Mapping);
+        this.props.answerMapping['test5AnswerMapping'] = answer5Mapping;
     }
 
     render() {

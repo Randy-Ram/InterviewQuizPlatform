@@ -9,12 +9,32 @@ import { Test7Container } from './Test7/Containers/Test7Container';
 import { Test8Container } from './Test8/Containers/Test8Container';
 import { Tabs, Tab } from 'react-bootstrap';
 
+
+let tabTitles = ["Test 1", "Test 2", "Test 3", "Test 4",
+                 "Test 5", "Test 6", "Test 7", "Test 8"]
+
 export class TestInterface extends React.Component {
     render(){
+        let testContainers = [<Test1Container answerMapping={this.props.answerMapping}/>, 
+                              <Test2Container answerMapping={this.props.answerMapping}/>,
+                              <Test3Container answerMapping={this.props.answerMapping}/>, 
+                              <Test4Container answerMapping={this.props.answerMapping}/>, 
+                              <Test5Container answerMapping={this.props.answerMapping}/>, 
+                              <Test6Container answerMapping={this.props.answerMapping}/>, 
+                              <Test7Container answerMapping={this.props.answerMapping}/>, 
+                              <Test8Container answerMapping={this.props.answerMapping}/>, 
+                            ]
+        let tabs = tabTitles.map((val, index) => 
+        <Tab key={index} eventKey={index} title={val}>
+            {testContainers[index]}
+        </Tab>
+    )
+
         return(
-            <Tabs defaultActiveKey={1} id="tab-body">
-                <Tab eventKey={1} title="Test 1">
-                    <Test1Container/>
+            <Tabs defaultActiveKey={0} id="tab-body">
+                {tabs}
+                {/* <Tab eventKey={1} title="Test 1">
+                    <Test1Container answerMapping={this.props.answerMapping}/>
                 </Tab>
                 <Tab eventKey={2} title="Test 2">
                     <Test2Container/>
@@ -36,7 +56,7 @@ export class TestInterface extends React.Component {
                 </Tab>
                 <Tab eventKey={8} title="Test 8">
                 <Test8Container/>
-                </Tab>
+                </Tab> */}
           </Tabs>
         )
      } 

@@ -24,7 +24,7 @@ export class UserFormContainer extends React.Component {
         this.handleUserIdChange = this.handleUserIdChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.showModal = this.showModal.bind(this);
-        this.onClickModal = this.onClickModal.bind(this)
+        this.onClickStartModal = this.onClickStartModal.bind(this)
         this.closeErrorModal = this.closeErrorModal.bind(this);
         this.checkFormValidity = this.checkFormValidity.bind(this);
         this.showErrorModal = this.showErrorModal.bind(this);
@@ -38,7 +38,7 @@ export class UserFormContainer extends React.Component {
         return false;
     }
 
-    onClickModal(){
+    onClickStartModal(){
         console.log("test")
         this.setState({
             show: false
@@ -110,8 +110,9 @@ export class UserFormContainer extends React.Component {
     }
 
     handleSubmit(e){
-        console.log("Clicked")
+        //console.log("Clicked")
         e.preventDefault();
+        // this.showModal();
         if(this.checkFormValidity()){
             this.showModal();
         } else {
@@ -162,22 +163,22 @@ export class UserFormContainer extends React.Component {
         </Form>
         )
         let userModal = <UserModal title="Test Instructions"
-                                   body="This test focuses on accuracy on speed. You will have 65 minutes, click 'Start' when
+                                   body="This test focuses on accuracy on speed. You will have 65 minutes, click 'Start Test' when
                                    you are ready to begin."
                                    showModal={this.state.show}
-                                   onClickModal={this.props.onClickModal}
+                                   onClickModal={this.onClickStartModal}
                                    buttonText={"Start Test"}
                                    />
         let errorModal = <UserModal title="Error" 
                                     body="Please ensure that all the relevant fields are properly filled in."
                                     showModal={this.state.errorShow}
-                                    onClickModal={this.props.closeErrorModal}
+                                    onClickModal={this.closeErrorModal}
                                     buttonText={"Ok"}
                         />
         let compToRender = this.state.show === true ? userModal : userForm; 
         let nextComp = this.state.errorShow === true ? errorModal : compToRender;
         return(
-            nextComp
+            nextComp    
         )
     }
 }

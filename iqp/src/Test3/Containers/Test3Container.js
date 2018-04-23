@@ -36,6 +36,7 @@ export class Test3Container extends React.Component {
     handleClick(letter_id){
         test3AnswerMapping[letter_id] = test3AnswerMapping[letter_id] === 0 ? 1 : 0;
         //console.log(test3AnswerMapping);
+        this.props.answerMapping['test3AnswerMapping'] = test3AnswerMapping;
     }
 
     render(){

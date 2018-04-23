@@ -42,7 +42,8 @@ export class Test8Container extends React.Component {
 
    handleUserAnswer(row, userAnswer){
         answer8Mapping[row] = userAnswer;
-        console.log(answer8Mapping);
+        //console.log(answer8Mapping);
+        this.props.answerMapping['test8AnswerMapping'] = answer8Mapping;
    }
 
     render(){

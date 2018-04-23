@@ -21,9 +21,10 @@ export class Test6Container extends React.Component {
     }
 
     handleAnswerMapping(row, col){
-        console.log(row, col)
+        //console.log(row, col)
         answer6Mapping["row_" + row.toString() + "_col_" + col.toString()] = answer6Mapping["row_" + row.toString() + "_col_" + col.toString()] === 0 ? 1 : 0
-        console.log(answer6Mapping);
+        //console.log(answer6Mapping);
+        this.props.answerMapping['test6AnswerMapping'] = answer6Mapping;
     }
 
     render(){

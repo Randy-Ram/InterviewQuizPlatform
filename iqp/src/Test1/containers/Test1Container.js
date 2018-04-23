@@ -33,6 +33,7 @@ export class Test1Container extends React.Component {
           test1AnswerMapping[label] = 1;
           //console.log(test1AnswerMapping);
         }
+        this.props.answerMapping['test1AnswerMapping'] = test1AnswerMapping;
       }
 
     render(){

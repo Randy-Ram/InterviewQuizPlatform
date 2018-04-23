@@ -24,7 +24,8 @@ export class Test4Container extends React.Component {
 
     handleUserInput(letter_id, userValue){
         answer4Mapping[letter_id] = userValue;
-        console.log(answer4Mapping)
+        //console.log(answer4Mapping)
+        this.props.answerMapping['test4AnswerMapping'] = answer4Mapping;
     }
 
     render(){

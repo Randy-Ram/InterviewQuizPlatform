@@ -30,9 +30,10 @@ export class Test2Container extends React.Component {
     }
 
     handleWordClick(word_id){
-        console.log(word_id);
+        //console.log(word_id);
         test2AnswerMapping[word_id] = test2AnswerMapping[word_id] === 0 ? 1 : 0
-        console.log(test2AnswerMapping)
+        //console.log(test2AnswerMapping)
+        this.props.answerMapping['test2AnswerMapping'] = test2AnswerMapping;
     }
 
 

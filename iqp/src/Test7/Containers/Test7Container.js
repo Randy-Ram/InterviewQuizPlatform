@@ -29,6 +29,7 @@ export class Test7Container extends React.Component {
     handleUserAnswer(questionNumber, userVal) {
         answer7Mapping[questionNumber] = userVal;
         //console.log(answer7Mapping)
+        this.props.answerMapping['test7AnswerMapping'] = answer7Mapping;
     }
 
     render(){
