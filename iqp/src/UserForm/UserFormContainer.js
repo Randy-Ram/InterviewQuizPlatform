@@ -1,7 +1,8 @@
 import React from 'react';
 import { Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import { UserModal } from './UserModal';
-import { startTestModalBody } from './StartTestModal'
+import { startTestModalBody } from './StartTestModal';
+import fetch from 'isomorphic-fetch';
 
 export class UserFormContainer extends React.Component {
     constructor(props){
@@ -39,11 +40,26 @@ export class UserFormContainer extends React.Component {
     }
 
     onClickStartModal(){
-        console.log("test")
-        this.setState({
-            show: false
-        })
-        this.props.onSubmit(true);  //start test
+        fetch('/api/startTest', {
+            credentials: 'same-origin',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({action: "startTest"})
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);
+              if(data.status === "success"){
+                this.setState({
+                    show: false
+                })
+                this.props.onSubmit(true);
+              }
+          })
+          .catch(error => console.log)
     }
 
     showModal() {
@@ -90,7 +106,7 @@ export class UserFormContainer extends React.Component {
 
     handlePasswordChange(e){
         this.setState({
-            firstName: e.target.value
+            password: e.target.value
         })
     }
 
@@ -110,7 +126,7 @@ export class UserFormContainer extends React.Component {
     render(){
         let userForm = (
             <Form horizontal>
-            <FormGroup controlId="formHorizontalEmail"  validationState={this.getUserIDValidationState()}>
+            <FormGroup controlId="formHorizontalUserId"  validationState={this.getUserIDValidationState()}>
                 <Col componentClass={ControlLabel} sm={2} smOffset={2}>
                     UserID
                 </Col>
@@ -120,7 +136,7 @@ export class UserFormContainer extends React.Component {
                 </Col>
             </FormGroup>
 
-            <FormGroup controlId="formHorizontalFirstName"  validationState={this.getPasswordValidationState()}>
+            <FormGroup controlId="formHorizontalPassword"  validationState={this.getPasswordValidationState()}>
                 <Col componentClass={ControlLabel} sm={2} smOffset={2}>
                 Password
                 </Col>

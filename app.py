@@ -1,5 +1,7 @@
 import os
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify, session
+from pprint import pprint
+import datetime
 
 app = Flask(__name__, static_folder='react_app/build')
 
@@ -16,10 +18,28 @@ def serve(path):
         return send_from_directory('iqp/build', 'index.html')
 
 
+@app.route('/api/startTest', methods=['POST'])
+def start_test():
+    pprint(request.get_json())
+    print("Saving start time")
+    session['start_time'] = datetime.datetime.now()
+    return jsonify({'status': 'success'})
+
+
+@app.route('/api/postResults', methods=['POST'])
+def post_results():
+    pprint(request.get_json())
+    session['end_time'] = datetime.datetime.now()
+    print(session['start_time'])
+    print(session['end_time'])
+    session['total_time'] = (session['end_time'] - session['start_time']).total_seconds()
+    return jsonify({'status': 'success'})
+
+
 @app.route('/api/authenticate', methods=['POST'])
 def auth():
     print(request.get_json())
-    if request.get_json().get('username') == 'rram' and request.get_json().get('password') == '1234':
+    if request.get_json().get('username') == 'rram' and request.get_json().get('password') == '12345':
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
@@ -46,4 +66,5 @@ APIs to build:
 '''
 
 if __name__ == '__main__':
+    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     app.run(use_reloader=True, port=5000, threaded=True)
