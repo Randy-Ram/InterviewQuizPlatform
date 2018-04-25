@@ -1,8 +1,8 @@
 import React from 'react';
-import { Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import { UserModal } from './UserModal';
 import { startTestModalBody } from './StartTestModal';
 import fetch from 'isomorphic-fetch';
+import { LoginForm } from '../Containers/LoginFormContainer';
 
 export class UserFormContainer extends React.Component {
     constructor(props){
@@ -40,26 +40,30 @@ export class UserFormContainer extends React.Component {
     }
 
     onClickStartModal(){
-        fetch('/api/startTest', {
-            credentials: 'same-origin',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({action: "startTest"})
-          })
-          .then(response => response.json())
-          .then(data => {
-              console.log(data);
-              if(data.status === "success"){
+        // fetch('/api/startTest', {
+        //     credentials: 'same-origin',
+        //     headers: {
+        //       'Accept': 'application/json',
+        //       'Content-Type': 'application/json'
+        //     },
+        //     method: "POST",
+        //     body: JSON.stringify({action: "startTest"})
+        //   })
+        //   .then(response => response.json())
+        //   .then(data => {
+        //       console.log(data);
+        //       if(data.status === "success"){
+        //         this.setState({
+        //             show: false
+        //         })
+        //         this.props.onSubmit(true);
+        //       }
+        //   })
+        //   .catch(error => console.log)
                 this.setState({
                     show: false
                 })
                 this.props.onSubmit(true);
-              }
-          })
-          .catch(error => console.log)
     }
 
     showModal() {
@@ -124,35 +128,6 @@ export class UserFormContainer extends React.Component {
 
 
     render(){
-        let userForm = (
-            <Form horizontal>
-            <FormGroup controlId="formHorizontalUserId"  validationState={this.getUserIDValidationState()}>
-                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                    UserID
-                </Col>
-                <Col sm={3}>
-                <FormControl type="text" value={this.state.userId} onChange={this.handleUserIdChange}/>
-                <FormControl.Feedback />
-                </Col>
-            </FormGroup>
-
-            <FormGroup controlId="formHorizontalPassword"  validationState={this.getPasswordValidationState()}>
-                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                Password
-                </Col>
-                <Col sm={3}>
-                <FormControl type="text" value={this.state.password}  onChange={this.handlePasswordChange}/>
-                <FormControl.Feedback />
-                </Col>
-            </FormGroup>
-
-            <FormGroup>
-                <Col smOffset={4} sm={2}>
-                <Button type="submit" onClick={this.handleSubmit}>Submit</Button>
-                </Col>
-            </FormGroup>
-        </Form>
-        )
         let userModal = <UserModal title="Instructions"
                                    body={startTestModalBody}
                                    showModal={this.state.show}
@@ -166,7 +141,16 @@ export class UserFormContainer extends React.Component {
                                     onClickModal={this.closeErrorModal}
                                     buttonText={"Ok"}
                         />
-        let compToRender = this.state.show === true ? userModal : userForm; 
+        let compToRender = this.state.show === true ? userModal : <LoginForm getUserIDValidationState={this.getUserIDValidationState} 
+                                                                             getPasswordValidationState={this.getPasswordValidationState}
+                                                                             handleSubmit={this.handleSubmit}
+                                                                             password={this.state.password}
+                                                                             userId={this.state.userId}
+                                                                             handleUserIdChange={this.handleUserIdChange}
+                                                                             handlePasswordChange={this.handlePasswordChange}
+                                                                             usernameLabel="UserID"
+                                                                             passwordLabel="Password"
+                                                                 />; 
         let nextComp = this.state.errorShow === true ? errorModal : compToRender;
         return(
             nextComp    

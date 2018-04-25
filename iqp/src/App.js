@@ -4,9 +4,11 @@ import './App.css';
 import { TestInterface } from './TestInterface';
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 import Countdown from 'react-countdown-now';
-import { UserFormContainer } from './UserForm/UserFormContainer';
-import { UserModal } from './UserForm/UserModal';
+import { UserFormContainer } from './UserForm/Components/UserFormComponent';
+import { UserModal } from './UserForm/Components/UserModal';
 import fetch from 'isomorphic-fetch';
+import { AdminComponent } from './AdminConsole/Components/AdminComponent';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 //import maritime_logo from './maritime_logo.png';
 let timerStyle = {
@@ -35,6 +37,9 @@ class App extends Component {
     this.closeModal = this.closeModal.bind(this)
     this.handleTimerComplete = this.handleTimerComplete.bind(this);
     this.authenticateUser = this.authenticateUser.bind(this);
+    this.showTestPage = this.showTestPage.bind(this);
+    this.endTestModal = this.endTestModal.bind(this);
+    this.componentToDisplay = this.componentToDisplay.bind(this)
   }
 
 
@@ -95,42 +100,82 @@ componentWillMount(){
   this.authenticateUser()
 }
 
-  render() {
-    let endTestModal = <UserModal title="Results Submitted!"
+showTestPage(){
+  return(
+    <div>
+          <Grid>
+              <Row>
+                <Col md={4} xsOffset={5}>
+                    <div style={timerStyle}>
+                        <Countdown date={Date.now() + 100000} onComplete={this.handleTimerComplete}/>
+                        {/* <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/> */}
+                    </div>
+                </Col>
+                <Col md={2}>
+                  <Button onClick={this.endTest} className="pull-right" bsStyle="danger">End Test</Button>
+                </Col>
+                </Row>
+            </Grid>
+            {this.state.endTestClicked === false ? <TestInterface answerMapping={allAnswerMapping}/> : this.endTestModal()}
+      </div>
+  )
+}
+
+endTestModal() {
+  return (
+    <UserModal title="Results Submitted!"
                                    body="Thank you for your time. Your results have been submitted."
                                    showModal={this.state.showModal}
                                    onClickModal={this.closeModal}
                                    buttonText={"OK"}
                                    />
+  )
+}
 
-    let testPage = (
-      <div>
-        <Grid>
-            <Row>
-              <Col md={4} xsOffset={5}>
-                  <div style={timerStyle}>
-                      <Countdown date={Date.now() + 100000} onComplete={this.handleTimerComplete}/>
-                      {/* <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/> */}
-                  </div>
-              </Col>
-              <Col md={2}>
-                <Button onClick={this.endTest} className="pull-right" bsStyle="danger">End Test</Button>
-              </Col>
-              </Row>
-          </Grid>
-          {this.state.endTestClicked === false ? <TestInterface answerMapping={allAnswerMapping}/> : endTestModal}
-      </div>
-    )
-    let componentToDisplay = this.state.testStarted === true  ? testPage : <UserFormContainer onSubmit={this.updateAppState}/>
+componentToDisplay() {
+  return this.state.testStarted === true  ? this.showTestPage() : <UserFormContainer onSubmit={this.updateAppState}/>
+}
+  render() {
+    // let endTestModal = <UserModal title="Results Submitted!"
+    //                                body="Thank you for your time. Your results have been submitted."
+    //                                showModal={this.state.showModal}
+    //                                onClickModal={this.closeModal}
+    //                                buttonText={"OK"}
+    //                                />
+
+    // let testPage = (
+    //   <div>
+    //     <Grid>
+    //         <Row>
+    //           <Col md={4} xsOffset={5}>
+    //               <div style={timerStyle}>
+    //                   <Countdown date={Date.now() + 100000} onComplete={this.handleTimerComplete}/>
+    //                   {/* <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/> */}
+    //               </div>
+    //           </Col>
+    //           <Col md={2}>
+    //             <Button onClick={this.endTest} className="pull-right" bsStyle="danger">End Test</Button>
+    //           </Col>
+    //           </Row>
+    //       </Grid>
+    //       {this.state.endTestClicked === false ? <TestInterface answerMapping={allAnswerMapping}/> : endTestModal}
+    //   </div>
+    // )
+    //let componentToDisplay = this.state.testStarted === true  ? this.showTestPage() : <UserFormContainer onSubmit={this.updateAppState}/>
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Pre-Interview Assessment</h1>
-        </header>
-        <br/>
-          {componentToDisplay}
-      </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Pre-Interview Assessment</h1>
+          </header>
+          <br/>
+          <Switch>
+            <Route exact path="/" component={this.componentToDisplay}/>
+            <Route path="/admin" component={AdminComponent}/>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
