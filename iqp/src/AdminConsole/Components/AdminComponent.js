@@ -1,6 +1,8 @@
 import React from 'react';
 import { AdminLoginContainer } from '../Containers/AdminLoginContainer';
-import { UserModal } from '../../UserForm/Components/UserModal';
+import { UserInfoContainer } from '../Containers/UserInfoContainer';
+import { Tabs, Tab } from 'react-bootstrap';
+
 
 export class AdminComponent extends React.Component {
     constructor(props){
@@ -19,7 +21,14 @@ export class AdminComponent extends React.Component {
     }
 
     render(){
-      
-       return <AdminLoginContainer handleAuth={this.updateAuthenticationState} authState={this.state.authenticated}/>
+      let adminBody = (
+            <Tabs defaultActiveKey={0} id="tab-body">
+                <Tab key={0} eventKey={0} title={"User List"}>
+                    <UserInfoContainer/>
+                </Tab>
+            </Tabs>
+        )
+       return this.state.authenticated === false ? <AdminLoginContainer handleAuth={this.updateAuthenticationState} authState={this.state.authenticated}/> :
+                                                    adminBody    
    }
 }

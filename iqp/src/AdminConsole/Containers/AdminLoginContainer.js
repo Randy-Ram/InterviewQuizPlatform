@@ -116,7 +116,7 @@ export class AdminLoginContainer extends React.Component {
 
     render(){
             let adminPortal = <h1>Admin Portal </h1>
-            let compToRender = this.props.authState === true ? adminPortal : <LoginForm     getUserIDValidationState={this.getUserIDValidationState} 
+            let compToRender = this.props.authState === false ? <LoginForm     getUserIDValidationState={this.getUserIDValidationState} 
                                                                                             getPasswordValidationState={this.getPasswordValidationState}
                                                                                             handleSubmit={this.handleSubmit}
                                                                                             password={this.state.password}
@@ -125,7 +125,7 @@ export class AdminLoginContainer extends React.Component {
                                                                                             handlePasswordChange={this.handlePasswordChange}
                                                                                             usernameLabel="Admin Username"
                                                                                             passwordLabel="Admin Password"
-                                                                                    />; 
+                                                                                    />: adminPortal; 
             let nextComp = this.state.errorShow === true ? this.renderErrorModal() : compToRender;
             return(
                 nextComp    
