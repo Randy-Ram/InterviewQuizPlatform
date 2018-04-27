@@ -1,5 +1,6 @@
 import React from "react";
 import namor from "namor";
+import moment from 'moment';
 // import "./index.css";
 
 const range = len => {
@@ -12,13 +13,17 @@ const range = len => {
 
 const newPerson = () => {
   const statusChance = Math.random();
+  var d = new Date()
   return {
+    userID: namor.generate({ words: 1, numbers: 0 }),
     firstName: namor.generate({ words: 1, numbers: 0 }),
     lastName: namor.generate({ words: 1, numbers: 0 }),
     age: Math.floor(Math.random() * 30),
     visits: Math.floor(Math.random() * 100),
     progress: Math.floor(Math.random() * 100),
-    status:
+    role: statusChance > 0.95 ? 'admin' : 'candidate',
+    TestDate: moment(),
+    status: 
       statusChance > 0.66
         ? "relationship"
         : statusChance > 0.33 ? "complicated" : "single"

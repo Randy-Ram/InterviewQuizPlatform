@@ -2,7 +2,12 @@ import React from "react";
 import { render } from "react-dom";
 import _ from "lodash";
 import { makeData } from "./Utils";
-import { Grid, Alert, Table, Row, Col  } from 'react-bootstrap';
+import { Grid, Alert, Table, Row, Col, Button  } from 'react-bootstrap';
+import { CreateUserModal } from './CreateUserModal';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+// import 'react-datepicker/dist/react-datepicker.css';
+import './DatepickerCssFix.css'
 
 // Import React Table
 import ReactTable from "react-table";
@@ -56,9 +61,18 @@ export class UserInfoContainer extends React.Component {
     this.state = {
       data: [],
       pages: null,
-      loading: true
+      loading: true,
+      show: false,
+      newUserFirstName: '',
+      newUserLastName: '',
+      newUserRole: '',
+      startDate: moment()
     };
     this.fetchData = this.fetchData.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+
   }
   fetchData(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
@@ -79,27 +93,78 @@ export class UserInfoContainer extends React.Component {
       });
     });
   }
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
+  }
+
+  handleDateChange(date) {
+    console.log(date)
+    this.setState({
+      startDate: date
+    });
+    // var new_data = this.state.data
+    // new_data[index]['TestDate'] = date
+    // this.setState({
+    //   data: new_data
+    // });
+  }
+
   render() {
     const { data, pages, loading } = this.state;
-    return (
+    console.log(this.state.data)
+     return (
     <Grid>
+        <CreateUserModal showModal={this.state.show} closeModal={this.handleClose} />
+        <br/>
+        <Row>
+            <Col>
+                <Button bsStyle="primary" onClick={() => this.handleShow()}>Create User</Button>
+            </Col>
+        </Row>
+        <br/>
         <Row>
             <Col>
             <div>
                 <ReactTable
                 columns={[
                     {
-                    Header: "First Name",
-                    accessor: "firstName"
+                        Header: "UserID",
+                        accessor: "userID"
                     },
                     {
-                    Header: "Last Name",
-                    id: "lastName",
-                    accessor: d => d.lastName
+                        Header: "First Name",
+                        accessor: "firstName"
                     },
                     {
-                    Header: "Age",
-                    accessor: "age"
+                        Header: "Last Name",
+                        id: "lastName",
+                        accessor: d => d.lastName
+                    },
+                    {
+                        Header: "Role",
+                        accessor: "role"
+                    },
+                    {
+                        Header: 'Delete',
+                        Cell: (row) => (
+                            // <Button bsStyle="danger" onClick={() => this.props.handleDeleteUser(row.original.userID)}>Delete User</Button>
+                            <Button bsStyle="danger" onClick={() => console.log(row)}>Delete User</Button>
+                        )
+                    },
+                    {
+                        Header: 'Test Date',
+                        Cell: (row) => (
+                          <DatePicker
+                            selected={row.TestDate}
+                            onChange={this.handleDateChange}
+                            placeholderText="Set date for test"
+                          />
+                        )
                     }
                 ]}
                 manual // Forces table not to paginate or sort automatically, so we can handle it server-side

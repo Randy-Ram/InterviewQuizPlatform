@@ -4,7 +4,7 @@ import { Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-b
 export class LoginForm extends React.Component {
     render(){
         return(
-            <Form horizontal>
+            <Form horizontal style={{"paddingLeft": "95px"}}>
             <FormGroup controlId="formHorizontalUserId"  validationState={this.props.getUserIDValidationState()}>
                 <Col componentClass={ControlLabel} sm={2} smOffset={2}>
                     {this.props.usernameLabel}
@@ -20,7 +20,7 @@ export class LoginForm extends React.Component {
                 {this.props.passwordLabel}
                 </Col>
                 <Col sm={3}>
-                <FormControl type="text" value={this.props.password}  onChange={this.props.handlePasswordChange}/>
+                <FormControl type="password" value={this.props.password}  onChange={this.props.handlePasswordChange}/>
                 <FormControl.Feedback />
                 </Col>
             </FormGroup>
