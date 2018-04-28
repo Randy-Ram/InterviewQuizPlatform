@@ -22,7 +22,7 @@ const newPerson = () => {
     visits: Math.floor(Math.random() * 100),
     progress: Math.floor(Math.random() * 100),
     role: statusChance > 0.95 ? 'admin' : 'candidate',
-    TestDate: moment(),
+    TestDate: moment().format('MM/DD/YYYY'),
     status: 
       statusChance > 0.66
         ? "relationship"

@@ -18,9 +18,23 @@ export class CreateUserModal extends React.Component {
         this.setState({
           startDate: date
         });
+        this.props.handleNewUserTestDate(date);
       }
 
     newUserForm() {
+        let testDateInput = (
+            <FormGroup controlId="formControlsSelect">
+                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+                    Test Date:  
+                </Col>
+                <Col sm={3}>
+                <DatePicker
+                    selected={this.state.startDate}
+                    onChange={this.handleChange}
+                />
+                </Col>
+            </FormGroup>
+        )
         return (
                 <Form horizontal>
                 <FormGroup controlId="formHorizontalUserId">
@@ -47,24 +61,14 @@ export class CreateUserModal extends React.Component {
                         Role: 
                     </Col>
                     <Col sm={3}>
-                        <FormControl componentClass="select" placeholder="select">
+                        <FormControl componentClass="select" placeholder="select" onChange={this.props.handleNewUserRoleChange}>
                             <option value="Candidate">Candidate</option>
                             <option value="Admin">Admin</option>
                         </FormControl>
                     </Col>
                 </FormGroup>
-                <FormGroup controlId="formControlsSelect">
-                    <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                        Test Date:  
-                    </Col>
-                    <Col sm={3}>
-                    <DatePicker
-                        selected={this.state.startDate}
-                        onChange={this.handleChange}
-                    />
-                    </Col>
-                </FormGroup>
-            
+
+                {this.props.isAdmin === false ? testDateInput: <br/>}
                 {/* <FormGroup>
                     <Col smOffset={4} sm={2}>
                     <Button type="submit" onClick={this.props.handleSubmit}>Submit</Button>
@@ -88,7 +92,7 @@ export class CreateUserModal extends React.Component {
 
                     <Modal.Footer>
                     <Button onClick={this.props.closeModal}>Close</Button>
-                    <Button bsStyle="primary">Save changes</Button>
+                    <Button bsStyle="primary" onClick={this.props.saveData}>Save changes</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

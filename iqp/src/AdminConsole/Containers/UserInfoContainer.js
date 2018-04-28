@@ -65,14 +65,21 @@ export class UserInfoContainer extends React.Component {
       show: false,
       newUserFirstName: '',
       newUserLastName: '',
-      newUserRole: '',
-      startDate: moment()
+      newUserRole: 'Candidate',
+      newUserTestDate: moment().format('MM/DD/YYYY'),
+      startDate: moment(),
+      isAdmin: false,
     };
     this.fetchData = this.fetchData.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
-
+    this.handleNewUserFirstNameChange = this.handleNewUserFirstNameChange.bind(this);
+    this.handleNewUserLastNameChange = this.handleNewUserLastNameChange.bind(this);
+    this.handleNewUserRoleChange = this.handleNewUserRoleChange.bind(this);
+    this.handleNewUserTestDate = this.handleNewUserTestDate.bind(this);
+    this.saveData = this.saveData.bind(this);
+    this.handleSetTestDate = this.handleSetTestDate.bind(this);
   }
   fetchData(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
@@ -94,16 +101,65 @@ export class UserInfoContainer extends React.Component {
     });
   }
 
+
+  handleNewUserFirstNameChange(e){
+    this.setState({
+        newUserFirstName: e.target.value
+    })
+}
+
+  handleNewUserLastNameChange(e){
+  this.setState({
+    newUserLastName: e.target.value
+  })
+}
+
+  handleNewUserRoleChange(e){
+  let role = e.target.value;
+  if (role === "Candidate"){
+    this.setState({
+      newUserRole: e.target.value,
+      isAdmin: false
+    })
+  } else {
+    this.setState({
+      newUserRole: role,
+      isAdmin: true
+    })
+  }
+}
+
+handleNewUserTestDate(e){
+  this.setState({
+    newUserTestDate: e.format()  //momentjs object
+  })
+}
+
+  saveData(){
+     console.log(this.state.newUserFirstName);
+     console.log(this.state.newUserLastName);
+     console.log(this.state.newUserRole)
+     console.log(this.state.newUserTestDate);
+     this.handleClose()
+  }
+
   handleClose() {
-    this.setState({ show: false });
+    this.setState({ 
+      show: false,
+      newUserFirstName: '',
+      newUserLastName: '',
+      newUserRole: 'Candidate',
+      newUserTestDate: moment().format('MM/DD/YYYY')
+    });
   }
 
   handleShow() {
     this.setState({ show: true });
   }
 
+
   handleDateChange(date) {
-    console.log(date)
+    // console.log(date)
     this.setState({
       startDate: date
     });
@@ -114,12 +170,31 @@ export class UserInfoContainer extends React.Component {
     // });
   }
 
+  handleSetTestDate(row){
+    this.setState({
+      newUserFirstName: row.original.firstName,
+      newUserLastName: row.original.lastName,
+      newUserRole: row.original.role
+    }, this.handleShow)
+  }
+
   render() {
     const { data, pages, loading } = this.state;
-    console.log(this.state.data)
+    // console.log(this.state.data)
      return (
     <Grid>
-        <CreateUserModal showModal={this.state.show} closeModal={this.handleClose} />
+        <CreateUserModal showModal={this.state.show} 
+                         closeModal={this.handleClose}
+                         newUserFirstName={this.state.newUserFirstName}
+                         newUserLastName={this.state.newUserLastName}
+                         newUserRole={this.state.newUserRole}
+                         handleNewUserFirstNameChange = {this.handleNewUserFirstNameChange}
+                         handleNewUserLastNameChange = {this.handleNewUserLastNameChange}
+                         handleNewUserRoleChange = {this.handleNewUserRoleChange}
+                         handleNewUserTestDate = {this.handleNewUserTestDate}
+                         saveData = {this.saveData}
+                         isAdmin = {this.state.isAdmin}
+        />
         <br/>
         <Row>
             <Col>
@@ -150,22 +225,27 @@ export class UserInfoContainer extends React.Component {
                         accessor: "role"
                     },
                     {
-                        Header: 'Delete',
+                      Header: "Test Date",
+                      accessor: "TestDate"
+                    },
+                    {
+                        Header: 'Set Date',
                         Cell: (row) => (
-                            // <Button bsStyle="danger" onClick={() => this.props.handleDeleteUser(row.original.userID)}>Delete User</Button>
-                            <Button bsStyle="danger" onClick={() => console.log(row)}>Delete User</Button>
+                          <Button bsStyle="primary" onClick={() => this.handleSetTestDate(row)}>Set Test Date</Button>
+                          // <DatePicker
+                          //   selected={row.TestDate}
+                          //   onChange={this.handleDateChange}
+                          //   placeholderText="Set date for test"
+                          // />
                         )
                     },
                     {
-                        Header: 'Test Date',
-                        Cell: (row) => (
-                          <DatePicker
-                            selected={row.TestDate}
-                            onChange={this.handleDateChange}
-                            placeholderText="Set date for test"
-                          />
-                        )
-                    }
+                      Header: 'Delete',
+                      Cell: (row) => (
+                          // <Button bsStyle="danger" onClick={() => this.props.handleDeleteUser(row.original.userID)}>Delete User</Button>
+                          <Button bsStyle="danger" onClick={() => console.log(row)}>Delete User</Button>
+                      )
+                  }
                 ]}
                 manual // Forces table not to paginate or sort automatically, so we can handle it server-side
                 data={data}
