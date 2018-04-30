@@ -58,6 +58,7 @@ const requestData = (pageSize, page, sorted, filtered) => {
 export class UserInfoContainer extends React.Component {
   constructor() {
     super();
+    this.editOrNewUser = "new";
     this.state = {
       data: [],
       pages: null,
@@ -68,7 +69,6 @@ export class UserInfoContainer extends React.Component {
       newUserRole: 'Candidate',
       newUserTestDate: moment().format('MM/DD/YYYY'),
       startDate: moment(),
-      isAdmin: false,
     };
     this.fetchData = this.fetchData.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -79,7 +79,8 @@ export class UserInfoContainer extends React.Component {
     this.handleNewUserRoleChange = this.handleNewUserRoleChange.bind(this);
     this.handleNewUserTestDate = this.handleNewUserTestDate.bind(this);
     this.saveData = this.saveData.bind(this);
-    this.handleSetTestDate = this.handleSetTestDate.bind(this);
+    this.handleEditUser = this.handleEditUser.bind(this);
+    this.handleCreateUser = this.handleCreateUser.bind(this);
   }
   fetchData(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
@@ -115,18 +116,21 @@ export class UserInfoContainer extends React.Component {
 }
 
   handleNewUserRoleChange(e){
-  let role = e.target.value;
-  if (role === "Candidate"){
     this.setState({
-      newUserRole: e.target.value,
-      isAdmin: false
+      newUserRole: e.target.value
     })
-  } else {
-    this.setState({
-      newUserRole: role,
-      isAdmin: true
-    })
-  }
+  // let role = e.target.value;
+  // if (role === "Candidate"){
+  //   this.setState({
+  //     newUserRole: e.target.value,
+  //     isAdmin: false
+  //   })
+  // } else {
+  //   this.setState({
+  //     newUserRole: role,
+  //     isAdmin: true
+  //   })
+  // }
 }
 
 handleNewUserTestDate(e){
@@ -153,6 +157,11 @@ handleNewUserTestDate(e){
     });
   }
 
+  handleCreateUser(){
+    this.editOrNewUser = 'new';
+    this.handleShow();
+  }
+
   handleShow() {
     this.setState({ show: true });
   }
@@ -170,7 +179,8 @@ handleNewUserTestDate(e){
     // });
   }
 
-  handleSetTestDate(row){
+  handleEditUser(row){
+    this.editOrNewUser = "edit";
     this.setState({
       newUserFirstName: row.original.firstName,
       newUserLastName: row.original.lastName,
@@ -198,7 +208,7 @@ handleNewUserTestDate(e){
         <br/>
         <Row>
             <Col>
-                <Button bsStyle="primary" onClick={() => this.handleShow()}>Create User</Button>
+                <Button bsStyle="primary" onClick={() => this.handleCreateUser()}>Create User</Button>
             </Col>
         </Row>
         <br/>
@@ -229,9 +239,9 @@ handleNewUserTestDate(e){
                       accessor: "TestDate"
                     },
                     {
-                        Header: 'Set Date',
+                        Header: 'Edit User',
                         Cell: (row) => (
-                          <Button bsStyle="primary" onClick={() => this.handleSetTestDate(row)}>Set Test Date</Button>
+                          <Button bsStyle="primary" onClick={() => this.handleEditUser(row)}>Edit User</Button>
                           // <DatePicker
                           //   selected={row.TestDate}
                           //   onChange={this.handleDateChange}

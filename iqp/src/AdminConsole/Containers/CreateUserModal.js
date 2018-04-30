@@ -68,7 +68,7 @@ export class CreateUserModal extends React.Component {
                     </Col>
                 </FormGroup>
 
-                {this.props.isAdmin === false ? testDateInput: <br/>}
+                {/* {this.props.isAdmin === false ? testDateInput: <br/>} */}
                 {/* <FormGroup>
                     <Col smOffset={4} sm={2}>
                     <Button type="submit" onClick={this.props.handleSubmit}>Submit</Button>
