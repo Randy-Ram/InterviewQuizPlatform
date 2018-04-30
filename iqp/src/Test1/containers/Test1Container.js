@@ -61,7 +61,7 @@ export class Test1Container extends React.Component {
         return (
             <Grid>
                 <Alert id="test_instructions" bsStyle="warning">This is a test of concentration in checking for errors. 
-              Check all <strong><u>incorrect</u></strong> answers. Both speed and accuracy are important</Alert>
+              Check all <strong><u>incorrect</u></strong> answers. Both speed and accuracy are important.</Alert>
             
             {rowMapping}
             </Grid>

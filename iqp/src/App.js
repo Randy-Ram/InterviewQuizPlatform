@@ -36,7 +36,7 @@ class App extends Component {
     this.endTest = this.endTest.bind(this);
     this.closeModal = this.closeModal.bind(this)
     this.handleTimerComplete = this.handleTimerComplete.bind(this);
-    this.authenticateUser = this.authenticateUser.bind(this);
+    // this.authenticateUser = this.authenticateUser.bind(this);
     this.showTestPage = this.showTestPage.bind(this);
     this.endTestModal = this.endTestModal.bind(this);
     this.componentToDisplay = this.componentToDisplay.bind(this)
@@ -81,25 +81,6 @@ handleTimerComplete(){
   this.endTest();
 }
 
-authenticateUser(){
-    fetch('/api/authenticate', {
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({username: "rram", password: "12345"})
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.log)
-}
-
-componentWillMount(){
-  this.authenticateUser()
-}
-
 showTestPage(){
   return(
     <div>
@@ -107,8 +88,8 @@ showTestPage(){
               <Row>
                 <Col md={4} xsOffset={5}>
                     <div style={timerStyle}>
-                        <Countdown date={Date.now() + 100000} onComplete={this.handleTimerComplete}/>
-                        {/* <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/> */}
+                        {/* <Countdown date={Date.now() + 100000} onComplete={this.handleTimerComplete}/> */}
+                        <Countdown date={Date.now() + 3900000} onComplete={this.handleTimerComplete}/>
                     </div>
                 </Col>
                 <Col md={2}>

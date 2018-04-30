@@ -25,7 +25,7 @@ export class Test3Container extends React.Component {
     componentWillMount(){
         window.addEventListener("keydown", function (e) {
             if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70) || (e.keyCode === 91 && e.keyCode === 70) 
-                // || e.keyCode === 91
+                 || e.keyCode === 91
             ) { 
                 e.preventDefault();
                 alert("The exam tests speed and accuracy in finding the letters, not cheating by using browser shortcuts!")
@@ -50,8 +50,7 @@ export class Test3Container extends React.Component {
         return (
             <div>
                 <Alert id="test_instructions" bsStyle="warning">In the following list of letters you are to click on the letters 
-                <strong><u> Z, X, U and C</u></strong> but not any other letters. Both speed and accuracy is important. 
-                Both speed and accuracy is important.
+                <strong><u> Z, X, U and C</u></strong> but not any other letters. Both speed and accuracy are important. 
             </Alert>
                 <div id='test3-container'>
                 {lineMapping}

@@ -7,7 +7,7 @@ import { LoginForm } from '../Containers/LoginFormContainer';
 export class UserFormContainer extends React.Component {
     constructor(props){
         super(props);
-
+        this.authState = false;
         this.state = {
             userId: '',
             password: '',
@@ -15,7 +15,7 @@ export class UserFormContainer extends React.Component {
             surName: '',
             datetime: '',
             show: false,
-            errorShow: false
+            errorShow: false,
 
         }
 
@@ -29,6 +29,33 @@ export class UserFormContainer extends React.Component {
         this.closeErrorModal = this.closeErrorModal.bind(this);
         this.checkFormValidity = this.checkFormValidity.bind(this);
         this.showErrorModal = this.showErrorModal.bind(this);
+        this.authenticateUser = this.authenticateUser.bind(this);
+        this.verify_user = this.verify_user.bind(this);
+    }
+
+    verify_user(data){
+        console.log(data);
+        if(data.status === "failure"){
+          this.authState = false;
+        } else {
+         this.authState = true;
+        }
+      }
+
+      
+    authenticateUser(){
+        fetch('/api/authenticate', {
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify({username: this.state.userId, password: this.state.password})
+        })
+        .then(response => response.json())
+        .then(data => this.verify_user(data))
+        .catch(error => console.log)
     }
 
     checkFormValidity(){
@@ -117,8 +144,9 @@ export class UserFormContainer extends React.Component {
     handleSubmit(e){
         //console.log("Clicked")
         e.preventDefault();
-        // this.showModal();
-        if(this.checkFormValidity()){
+        this.authenticateUser()
+        console.log(this.authState)
+        if(this.checkFormValidity() && this.authState){
             this.showModal();
         } else {
             this.showErrorModal();
@@ -136,7 +164,7 @@ export class UserFormContainer extends React.Component {
                                    bsSize="large"
                                    />
         let errorModal = <UserModal title="Error" 
-                                    body="Please ensure that all the relevant fields are properly filled in."
+                                    body="Please ensure that all the relevant fields are properly filled in & your username/password is correct"
                                     showModal={this.state.errorShow}
                                     onClickModal={this.closeErrorModal}
                                     buttonText={"Ok"}

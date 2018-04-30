@@ -1,7 +1,7 @@
 import React from 'react';
 import { passage } from './Test2Passage'
 import { Test2PassageComponent } from '../Components/Test2PassageComponent';
-import { Alert } from 'react-bootstrap';
+import { Alert, Grid, Row, Col } from 'react-bootstrap';
 
 let newPassage = passage.replace(/\n\n/g,"\n").split("\n");
 let allParagraphs = []
@@ -47,15 +47,17 @@ export class Test2Container extends React.Component {
                                 />
                                 )
         return(
-            <div>
-                <Alert id="test_instructions" bsStyle="warning">In the following passage, when you click on a word it becomes
-                    highlighted. You are to click on all <strong><u>incorrectly spelt</u></strong> words. 
-                    Both speed and accuracy is important.
-                </Alert>
-            <div id='test2-container'>
-                {paragraphMapping}
-            </div>
-          </div>
+            <Grid>
+                <div>
+                    <Alert id="test_instructions" bsStyle="warning">In the following passage, when you click on a word it becomes
+                        highlighted. You are to click on all <strong><u>incorrectly spelt</u></strong> words. 
+                        Both speed and accuracy are important.
+                    </Alert>
+                    <div id='test2-container'>
+                        {paragraphMapping}
+                    </div>
+                </div>
+          </Grid>
         )
     }
 }

@@ -36,7 +36,7 @@ export class Test5Container extends React.Component {
             <Alert id="test_instructions" bsStyle="warning">
             Below is a list of names of men followed by the cities in which they live. You are to write the names of the men
             in the table to the right under their respective cities. Write the names under each city in <strong><u>
-                alphabetical order </u></strong>. Both speed and accuracy is important.
+                alphabetical order </u></strong>. Both speed and accuracy are important.
             </Alert>
             <Grid>
             <Row>

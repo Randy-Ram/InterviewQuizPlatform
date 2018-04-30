@@ -38,7 +38,7 @@ export class Test7Container extends React.Component {
         <Row>
             <Col>
                 <Alert id="test_instructions" bsStyle="warning">
-                    Solve the following problems. Both speed and accuracy is important.
+                    Solve the following problems. Both speed and accuracy are important.
                 </Alert>
             </Col>
         </Row>
