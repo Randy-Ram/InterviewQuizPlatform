@@ -51,7 +51,7 @@ export class UserFormContainer extends React.Component {
             'Content-Type': 'application/json'
           },
           method: "POST",
-          body: JSON.stringify({username: this.state.userId, password: this.state.password})
+          body: JSON.stringify({userId: this.state.userId, password: this.state.password})
         })
         .then(response => response.json())
         .then(data => this.verify_user(data))
