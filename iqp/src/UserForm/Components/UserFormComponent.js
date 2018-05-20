@@ -36,22 +36,22 @@ export class UserFormContainer extends React.Component {
     verify_user(data){
         console.log(data);
         if(data.status === "failure"){
-          this.authState = false;
+          this.showErrorModal()
         } else {
-         this.authState = true;
+            this.showModal();
         }
       }
 
       
     authenticateUser(){
-        fetch('/api/authenticate', {
+        fetch('http://127.0.0.1:5000/api/authenticate', {
           credentials: 'same-origin',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
           method: "POST",
-          body: JSON.stringify({userId: this.state.userId, password: this.state.password})
+          body: JSON.stringify({userid: this.state.userId, password: this.state.password})
         })
         .then(response => response.json())
         .then(data => this.verify_user(data))
@@ -144,10 +144,10 @@ export class UserFormContainer extends React.Component {
     handleSubmit(e){
         //console.log("Clicked")
         e.preventDefault();
-        this.authenticateUser()
+        // this.authenticateUser()
         console.log(this.authState)
-        if(this.checkFormValidity() && this.authState){
-            this.showModal();
+        if(this.checkFormValidity()){
+                this.authenticateUser()
         } else {
             this.showErrorModal();
         }

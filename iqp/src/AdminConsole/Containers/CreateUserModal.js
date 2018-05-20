@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -22,22 +22,22 @@ export class CreateUserModal extends React.Component {
       }
 
     newUserForm() {
-        let testDateInput = (
-            <FormGroup controlId="formControlsSelect">
-                <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                    Test Date:  
-                </Col>
-                <Col sm={3}>
-                <DatePicker
-                    selected={this.state.startDate}
-                    onChange={this.handleChange}
-                />
-                </Col>
-            </FormGroup>
-        )
+        // let testDateInput = (
+        //     <FormGroup controlId="formControlsSelect">
+        //         <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+        //             Test Date:  
+        //         </Col>
+        //         <Col sm={3}>
+        //         <DatePicker
+        //             selected={this.state.startDate}
+        //             onChange={this.handleChange}
+        //         />
+        //         </Col>
+        //     </FormGroup>
+        // )
         return (
                 <Form horizontal>
-                <FormGroup controlId="formHorizontalUserId">
+                <FormGroup controlId="formHorizontalFirstName">
                     <Col componentClass={ControlLabel} sm={2} smOffset={2}>
                         FirstName:
                     </Col>
@@ -47,12 +47,21 @@ export class CreateUserModal extends React.Component {
                     </Col>
                 </FormGroup>
             
-                <FormGroup controlId="formHorizontalPassword">
+                <FormGroup controlId="formHorizontalLastName">
                     <Col componentClass={ControlLabel} sm={2} smOffset={2}>
                         LastName: 
                     </Col>
                     <Col sm={3}>
                     <FormControl type="text" value={this.props.newUserLastName}  onChange={this.props.handleNewUserLastNameChange}/>
+                    <FormControl.Feedback />
+                    </Col>
+                </FormGroup>
+                <FormGroup controlId="formHorizontalPassword">
+                    <Col componentClass={ControlLabel} sm={2} smOffset={2}>
+                        Password: 
+                    </Col>
+                    <Col sm={3}>
+                    <FormControl type="text" value={this.props.newUserPassword}  onChange={this.props.handleNewUserPasswordChange}/>
                     <FormControl.Feedback />
                     </Col>
                 </FormGroup>

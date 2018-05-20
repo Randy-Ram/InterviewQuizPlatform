@@ -1,8 +1,8 @@
 import React from 'react';
 import { AdminLoginContainer } from '../Containers/AdminLoginContainer';
 import { UserInfoContainer } from '../Containers/UserInfoContainer';
-import { Tabs, Tab, Button } from 'react-bootstrap';
-import { ScheduleUsersContainer } from '../Containers/ScheduleUsersContainer';
+import { Tabs, Tab } from 'react-bootstrap';
+// import { ScheduleUsersContainer } from '../Containers/ScheduleUsersContainer';
 import { TestResultsContainer } from '../Containers/TestResultsContainer';
 
 export class AdminComponent extends React.Component {

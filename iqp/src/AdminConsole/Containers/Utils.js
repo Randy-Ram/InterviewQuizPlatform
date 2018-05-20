@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import namor from "namor";
 import moment from 'moment';
 // import "./index.css";
@@ -13,7 +13,7 @@ const range = len => {
 
 const newPerson = () => {
   const statusChance = Math.random();
-  var d = new Date()
+  // var d = new Date()
   return {
     userID: namor.generate({ words: 1, numbers: 0 }),
     firstName: namor.generate({ words: 1, numbers: 0 }),

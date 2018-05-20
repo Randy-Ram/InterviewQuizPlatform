@@ -36,15 +36,44 @@ export class AdminLoginContainer extends React.Component {
     }
 
 
-    authenticateUser(){
-        console.log(this.state.userId)  
-        if (this.state.userId === 'rram'){  //Authenticate user on backend here
-            this.props.handleAuth(true);
-        } else {
-            console.log("Failed Auth")
+    // authenticateUser(){
+    //     console.log(this.state.userId)  
+    //     if (this.state.userId === 'rram'){  //Authenticate user on backend here
+    //         this.props.handleAuth(true);
+    //     } else {
+    //         console.log("Failed Auth")
+    //         this.props.handleAuth(false);
+    //         this.showErrorModal("Authentication Error", "Please enter a valid username/password", "OK");
+    //     }
+    // }
+
+    verify_user(data){
+        // console.log(data);
+        if(data.status === "failure"){
             this.props.handleAuth(false);
-            this.showErrorModal("Authentication Error", "Please enter a valid username/password", "OK");
+            this.showErrorModal("Authentication Error", "Please enter a valid username/password", "OK")
+        } else if (data.role !== "admin") {
+            this.props.handleAuth(false);
+            this.showErrorModal("Authorization Error", "You are not allowed to access this page.", "OK")
         }
+        else {
+            this.props.handleAuth(true);
+        }
+      }
+
+    authenticateUser(){
+        fetch('http://127.0.0.1:5000/api/authenticate', {
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify({userid: this.state.userId, password: this.state.password})
+        })
+        .then(response => response.json())
+        .then(data => this.verify_user(data))
+        .catch(error => console.log)
     }
 
     showErrorModal(title, body, buttonText){

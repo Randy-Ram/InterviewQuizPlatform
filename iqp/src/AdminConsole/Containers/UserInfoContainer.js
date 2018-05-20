@@ -1,10 +1,10 @@
 import React from "react";
-import { render } from "react-dom";
+// import { render } from "react-dom";
 import _ from "lodash";
-import { makeData } from "./Utils";
-import { Grid, Alert, Table, Row, Col, Button  } from 'react-bootstrap';
+// import { makeData } from "./Utils";
+import { Grid, Row, Col, Button  } from 'react-bootstrap';
 import { CreateUserModal } from './CreateUserModal';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import moment from 'moment';
 // import 'react-datepicker/dist/react-datepicker.css';
 import './DatepickerCssFix.css'
@@ -13,13 +13,60 @@ import './DatepickerCssFix.css'
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-const rawData = makeData();
+// console.log(rawData)
+let rawData = ""
+function fetchUsers(){
+  console.log("Fetching Users")
+  fetch('http://127.0.0.1:5000/api/get_all_users', {
+    credentials: 'same-origin',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: "GET",
+    // body: JSON.stringify({userid: this.state.userId, password: this.state.password})
+  })
+  .then(status)
+  .then(response => response.json())
+  // .then(data => rawData = data["users"])
+  .then(function(data){
+    console.log(data)
+    rawData = data["users"]
+    return Promise.resolve("Done")
+  })
+  .catch(error => console.log(error))
+}
+
+fetchUsers();
+
+
+function fetchUsersWithCallback(callback, tableState, tableInstance){
+  console.log("Fetching Users with Callback")
+  fetch('http://127.0.0.1:5000/api/get_all_users', {
+    credentials: 'same-origin',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: "GET",
+    // body: JSON.stringify({userid: this.state.userId, password: this.state.password})
+  })
+  .then(status)
+  .then(response => response.json())
+  // .then(data => rawData = data["users"])
+  .then(function(data){
+    console.log(data)
+    rawData = data["users"]
+    callback(tableState, tableInstance)
+  })
+  .catch(error => console.log(error))
+}
 
 const requestData = (pageSize, page, sorted, filtered) => {
   return new Promise((resolve, reject) => {
     // You can retrieve your data however you want, in this case, we will just use some local data.
     let filteredData = rawData;
-
+    console.log(filteredData);
     // You can use the filters in your request, but you are responsible for applying them.
     if (filtered.length) {
       filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
@@ -55,10 +102,20 @@ const requestData = (pageSize, page, sorted, filtered) => {
   });
 };
 
+function status(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return Promise.resolve(response)
+  } else {
+    return Promise.reject(new Error(response.statusText))
+  }
+}
+
+
 export class UserInfoContainer extends React.Component {
   constructor() {
     super();
     this.editOrNewUser = "new";
+    this.tableState = ''
     this.state = {
       data: [],
       pages: null,
@@ -66,6 +123,7 @@ export class UserInfoContainer extends React.Component {
       show: false,
       newUserFirstName: '',
       newUserLastName: '',
+      newUserPassword: '',
       newUserRole: 'Candidate',
       newUserTestDate: moment().format('MM/DD/YYYY'),
       startDate: moment(),
@@ -78,6 +136,7 @@ export class UserInfoContainer extends React.Component {
     this.handleNewUserLastNameChange = this.handleNewUserLastNameChange.bind(this);
     this.handleNewUserRoleChange = this.handleNewUserRoleChange.bind(this);
     this.handleNewUserTestDate = this.handleNewUserTestDate.bind(this);
+    this.handleNewUserPasswordChange = this.handleNewUserPasswordChange.bind(this);
     this.saveData = this.saveData.bind(this);
     this.handleEditUser = this.handleEditUser.bind(this);
     this.handleCreateUser = this.handleCreateUser.bind(this);
@@ -87,6 +146,8 @@ export class UserInfoContainer extends React.Component {
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
     this.setState({ loading: true });
     // Request the data however you want.  Here, we'll use our mocked service we created earlier
+    this.tableState = state
+    console.log("Requesting Data")
     requestData(
       state.pageSize,
       state.page,
@@ -99,7 +160,7 @@ export class UserInfoContainer extends React.Component {
         pages: res.pages,
         loading: false
       });
-    });
+    })
   }
 
 
@@ -114,6 +175,12 @@ export class UserInfoContainer extends React.Component {
     newUserLastName: e.target.value
   })
 }
+
+  handleNewUserPasswordChange(e){
+    this.setState({
+      newUserPassword: e.target.value
+    })
+  }
 
   handleNewUserRoleChange(e){
     this.setState({
@@ -140,11 +207,49 @@ handleNewUserTestDate(e){
 }
 
   saveData(){
-     console.log(this.state.newUserFirstName);
-     console.log(this.state.newUserLastName);
-     console.log(this.state.newUserRole)
-     console.log(this.state.newUserTestDate);
-     this.handleClose()
+    //  console.log(this.state.newUserFirstName);
+    //  console.log(this.state.newUserLastName);
+    //  console.log(this.state.newUserRole)
+    //  console.log(this.state.newUserTestDate);
+    //  this.handleClose()
+     fetch('http://127.0.0.1:5000/api/create_user', {
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({firstname: this.state.newUserFirstName, 
+                            lastname: this.state.newUserLastName,
+                            password: this.state.newUserPassword,
+                            role: this.state.newUserRole
+                          })
+    })
+    .then(status)
+    .then(response => response.json())
+    .then(function(data) {
+      console.log('Request succeeded with JSON response', data);
+      this.handleClose()
+      fetchUsersWithCallback(this.fetchData, this.tableState, this.tableInstance)
+    }.bind(this))
+    .catch(function(error) {
+      console.log('Request failed', error);
+    });
+    // .then(response => response.json())
+    // .then(function(data){
+    //   if(data["status"] === "success"){
+    //     setTimeout(console.log("User succesfully created."), 500)
+    //   } else {
+    //     setTimeout(console.log("Error! User was not created."), 500)
+    //   }
+    // })
+    // .then(this.handleClose())
+    // .then(fetchUsers())
+    // .then(console.log("Users Fetched"))
+    // .then(this.fetchData(this.tableState, this.tableInstance))
+    // .then(console.log("Finished Requesting Data"))
+    // .then(this.tableInstance.forceUpdate())
+    // .catch(error => console.log)
   }
 
   handleClose() {
@@ -190,7 +295,7 @@ handleNewUserTestDate(e){
 
   render() {
     const { data, pages, loading } = this.state;
-    // console.log(this.state.data)
+    // console.log(this.state.show)
      return (
     <Grid>
         <CreateUserModal showModal={this.state.show} 
@@ -198,6 +303,8 @@ handleNewUserTestDate(e){
                          newUserFirstName={this.state.newUserFirstName}
                          newUserLastName={this.state.newUserLastName}
                          newUserRole={this.state.newUserRole}
+                         newUserPassword={this.state.newUserPassword}
+                         handleNewUserPasswordChange={this.handleNewUserPasswordChange}
                          handleNewUserFirstNameChange = {this.handleNewUserFirstNameChange}
                          handleNewUserLastNameChange = {this.handleNewUserLastNameChange}
                          handleNewUserRoleChange = {this.handleNewUserRoleChange}
@@ -219,16 +326,16 @@ handleNewUserTestDate(e){
                 columns={[
                     {
                         Header: "UserID",
-                        accessor: "userID"
+                        accessor: "userid"
                     },
                     {
                         Header: "First Name",
-                        accessor: "firstName"
+                        accessor: "firstname"
                     },
                     {
                         Header: "Last Name",
                         id: "lastName",
-                        accessor: d => d.lastName
+                        accessor: "lastname"
                     },
                     {
                         Header: "Role",
@@ -236,7 +343,7 @@ handleNewUserTestDate(e){
                     },
                     {
                       Header: "Test Date",
-                      accessor: "TestDate"
+                      accessor: "last_testdate"
                     },
                     {
                         Header: 'Edit User',
@@ -265,6 +372,8 @@ handleNewUserTestDate(e){
                 filterable
                 defaultPageSize={10}
                 className="-striped -highlight"
+                ref={el =>
+                  this.tableInstance = el}
                 />
             </div>
             </Col>

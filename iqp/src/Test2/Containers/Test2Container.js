@@ -1,7 +1,7 @@
 import React from 'react';
 import { passage } from './Test2Passage'
 import { Test2PassageComponent } from '../Components/Test2PassageComponent';
-import { Alert, Grid, Row, Col } from 'react-bootstrap';
+import { Alert, Grid } from 'react-bootstrap';
 
 let newPassage = passage.replace(/\n\n/g,"\n").split("\n");
 let allParagraphs = []
