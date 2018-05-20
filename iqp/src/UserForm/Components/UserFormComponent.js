@@ -67,26 +67,26 @@ export class UserFormContainer extends React.Component {
     }
 
     onClickStartModal(){
-        // fetch('/api/startTest', {
-        //     credentials: 'same-origin',
-        //     headers: {
-        //       'Accept': 'application/json',
-        //       'Content-Type': 'application/json'
-        //     },
-        //     method: "POST",
-        //     body: JSON.stringify({action: "startTest"})
-        //   })
-        //   .then(response => response.json())
-        //   .then(data => {
-        //       console.log(data);
-        //       if(data.status === "success"){
-        //         this.setState({
-        //             show: false
-        //         })
-        //         this.props.onSubmit(true);
-        //       }
-        //   })
-        //   .catch(error => console.log)
+        fetch('http://127.0.0.1:5000/api/startTest', {
+            credentials: 'same-origin',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({action: "startTest"})
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);
+              if(data.status === "success"){
+                this.setState({
+                    show: false
+                })
+                this.props.onSubmit(true);
+              }
+          })
+          .catch(error => console.log)
                 this.setState({
                     show: false
                 })

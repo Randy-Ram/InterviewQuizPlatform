@@ -63,7 +63,7 @@ endTest(){
     endTestClicked: true
   })
   console.log(allAnswerMapping)
-  fetch('/api/postResults', {
+  fetch('http://127.0.0.1:5000/api/postResults', {
     credentials: 'same-origin',
     headers: {
       'Accept': 'application/json',

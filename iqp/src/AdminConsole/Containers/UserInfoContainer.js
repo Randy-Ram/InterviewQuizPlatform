@@ -4,6 +4,7 @@ import _ from "lodash";
 // import { makeData } from "./Utils";
 import { Grid, Row, Col, Button  } from 'react-bootstrap';
 import { CreateUserModal } from './CreateUserModal';
+import { DeleteUserModal } from './DeleteUserModal'
 // import DatePicker from 'react-datepicker';
 import moment from 'moment';
 // import 'react-datepicker/dist/react-datepicker.css';
@@ -13,11 +14,18 @@ import './DatepickerCssFix.css'
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
+const api_urls = {
+  'get_users': 'http://127.0.0.1:5000/api/get_all_users',
+  'create_user': 'http://127.0.0.1:5000/api/create_user',
+  'delete_user': 'http://127.0.0.1:5000/api/delete_user',
+  'edit_user': 'http://127.0.0.1:5000/api/edit_user'
+}
+
 // console.log(rawData)
 let rawData = ""
 function fetchUsers(){
   console.log("Fetching Users")
-  fetch('http://127.0.0.1:5000/api/get_all_users', {
+  fetch(api_urls['get_users'], {
     credentials: 'same-origin',
     headers: {
       'Accept': 'application/json',
@@ -42,7 +50,8 @@ fetchUsers();
 
 function fetchUsersWithCallback(callback, tableState, tableInstance){
   console.log("Fetching Users with Callback")
-  fetch('http://127.0.0.1:5000/api/get_all_users', {
+  console.log(typeof(callback))
+  fetch(api_urls["get_users"], {
     credentials: 'same-origin',
     headers: {
       'Accept': 'application/json',
@@ -121,12 +130,16 @@ export class UserInfoContainer extends React.Component {
       pages: null,
       loading: true,
       show: false,
+      userid: null,
       newUserFirstName: '',
       newUserLastName: '',
       newUserPassword: '',
       newUserRole: 'Candidate',
       newUserTestDate: moment().format('MM/DD/YYYY'),
       startDate: moment(),
+      showDeleteModal: false,
+      rowClicked: '',
+      username: ''
     };
     this.fetchData = this.fetchData.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -140,7 +153,10 @@ export class UserInfoContainer extends React.Component {
     this.saveData = this.saveData.bind(this);
     this.handleEditUser = this.handleEditUser.bind(this);
     this.handleCreateUser = this.handleCreateUser.bind(this);
+    this.closeDeleteModal = this.closeDeleteModal.bind(this);
   }
+
+
   fetchData(state, instance) {
     // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
     // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
@@ -186,18 +202,6 @@ export class UserInfoContainer extends React.Component {
     this.setState({
       newUserRole: e.target.value
     })
-  // let role = e.target.value;
-  // if (role === "Candidate"){
-  //   this.setState({
-  //     newUserRole: e.target.value,
-  //     isAdmin: false
-  //   })
-  // } else {
-  //   this.setState({
-  //     newUserRole: role,
-  //     isAdmin: true
-  //   })
-  // }
 }
 
 handleNewUserTestDate(e){
@@ -207,23 +211,36 @@ handleNewUserTestDate(e){
 }
 
   saveData(){
-    //  console.log(this.state.newUserFirstName);
-    //  console.log(this.state.newUserLastName);
-    //  console.log(this.state.newUserRole)
-    //  console.log(this.state.newUserTestDate);
-    //  this.handleClose()
-     fetch('http://127.0.0.1:5000/api/create_user', {
+    let api = ''
+    let req_body = ''
+    console.log(this.state.userid)
+    if (this.editOrNewUser === "new"){
+      api = api_urls["create_user"]
+      req_body = {
+        firstname: this.state.newUserFirstName, 
+        lastname: this.state.newUserLastName,
+        password: this.state.newUserPassword,
+        role: this.state.newUserRole
+      }
+    } else {
+      api = api_urls["edit_user"]
+      req_body = {
+        firstname: this.state.newUserFirstName, 
+        lastname: this.state.newUserLastName,
+        password: this.state.newUserPassword,
+        role: this.state.newUserRole,
+        userid: this.state.userid
+      }
+    }
+
+     fetch(api, {
       credentials: 'same-origin',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify({firstname: this.state.newUserFirstName, 
-                            lastname: this.state.newUserLastName,
-                            password: this.state.newUserPassword,
-                            role: this.state.newUserRole
-                          })
+      body: JSON.stringify(req_body)
     })
     .then(status)
     .then(response => response.json())
@@ -235,29 +252,16 @@ handleNewUserTestDate(e){
     .catch(function(error) {
       console.log('Request failed', error);
     });
-    // .then(response => response.json())
-    // .then(function(data){
-    //   if(data["status"] === "success"){
-    //     setTimeout(console.log("User succesfully created."), 500)
-    //   } else {
-    //     setTimeout(console.log("Error! User was not created."), 500)
-    //   }
-    // })
-    // .then(this.handleClose())
-    // .then(fetchUsers())
-    // .then(console.log("Users Fetched"))
-    // .then(this.fetchData(this.tableState, this.tableInstance))
-    // .then(console.log("Finished Requesting Data"))
-    // .then(this.tableInstance.forceUpdate())
-    // .catch(error => console.log)
   }
 
   handleClose() {
+    this.editOrNewUser = "new"
     this.setState({ 
       show: false,
       newUserFirstName: '',
       newUserLastName: '',
       newUserRole: 'Candidate',
+      userid: null,
       newUserTestDate: moment().format('MM/DD/YYYY')
     });
   }
@@ -286,12 +290,59 @@ handleNewUserTestDate(e){
 
   handleEditUser(row){
     this.editOrNewUser = "edit";
+    console.log(row.original)
     this.setState({
-      newUserFirstName: row.original.firstName,
-      newUserLastName: row.original.lastName,
-      newUserRole: row.original.role
+      newUserFirstName: row.original.firstname,
+      newUserLastName: row.original.lastname,
+      newUserRole: row.original.role,
+      userid: row.original.userid
     }, this.handleShow)
   }
+
+
+  //************ Delete User Functions *********************/
+  closeDeleteModal(){
+    this.setState({
+      showDeleteModal: false
+    })
+  }
+
+  showDeleteModal(row){
+    let username = row.original.firstname + ' ' + row.original.lastname
+    this.setState({
+      rowClicked: row,
+      showDeleteModal: true,
+      username: username
+    })
+  }
+
+  handleDeleteUser(row, localFetchData, localTableState, localTableInstance){
+    console.log("Delete: " + row.original.userid)
+    fetch(api_urls["delete_user"], {
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({
+                            "userid": row.original.userid
+                          })
+    })
+    .then(status)
+    .then(response => response.json())
+    .then(function(data) {
+      console.log('Request succeeded with JSON response', data);
+      this.closeDeleteModal()
+      console.log(localFetchData)
+      fetchUsersWithCallback(localFetchData, localTableState, localTableInstance)
+    }.bind(this))
+    .catch(function(error) {
+      console.log('Request failed', error);
+    });
+  }
+
+  //**************************************************** */
 
   render() {
     const { data, pages, loading } = this.state;
@@ -313,6 +364,15 @@ handleNewUserTestDate(e){
                          isAdmin = {this.state.isAdmin}
         />
         <br/>
+        <DeleteUserModal showDeleteModal={this.state.showDeleteModal}
+                         closeDeleteModal={this.closeDeleteModal}
+                         handleDeleteUser={this.handleDeleteUser}
+                         rowClicked={this.state.rowClicked}
+                         username={this.state.username}
+                         fetchData={this.fetchData.bind(this)}
+                         tableState={this.tableState}
+                         tableInstance={this.tableInstance}
+        />
         <Row>
             <Col>
                 <Button bsStyle="primary" onClick={() => this.handleCreateUser()}>Create User</Button>
@@ -360,7 +420,7 @@ handleNewUserTestDate(e){
                       Header: 'Delete',
                       Cell: (row) => (
                           // <Button bsStyle="danger" onClick={() => this.props.handleDeleteUser(row.original.userID)}>Delete User</Button>
-                          <Button bsStyle="danger" onClick={() => console.log(row)}>Delete User</Button>
+                          <Button bsStyle="danger" onClick={() => this.showDeleteModal(row)}>Delete User</Button>
                       )
                   }
                 ]}
