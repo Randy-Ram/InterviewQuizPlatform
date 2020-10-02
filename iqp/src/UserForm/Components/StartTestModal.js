@@ -2,7 +2,7 @@ import React from 'react';
 
 export const startTestModalBody = (
 <div>
-    <h4>Welcome to the Maritime Financial Group! </h4>
+    <h4>Welcome to the InterviewQuizPlatform! </h4>
     <br/>
     <p>You're about to begin the Aptitude Test.</p>
     <br/>
