@@ -5,7 +5,7 @@
   "dependencies": {
     "fetch": "^1.1.0",
     "immutability-helper": "^2.6.6",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "moment": "^2.22.1",
     "namor": "^1.0.1",
     "react": "^16.3.1",
